@@ -1,0 +1,3 @@
+router-id 3
+input-ports 3025, 3026
+output-ports 2026-3-2, 4025-4-4
