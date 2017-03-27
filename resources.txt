@@ -1,1 +1,22 @@
 https://www.nada.kth.se/kurser/kth/2D1490/04/lectures/rip.pdf
+
+#Bellman-Ford
+
+def bellman_ford(G, w, s):                       Given a graph G, a weight function w, and a source node s 
+
+    for each vertex v in V[G]:                   For every node v in G
+        d[v] := infinity                         Set distance to v to a large number
+        p[v] := nil                              Set parent of v to nil
+    d[s] := 0                                    Set the source’s distance to itself to 0
+    for each vertex in V[G]:                     For every node v in G
+        for each edge (u,v) in the set E[G]:     for all edges
+            if d[v] > d[u] + w(u,v):             if the distance to a node can be updated
+                d[v] := d[u] + w(u, v)           update the v’s distance
+                p[v] := u                        update the v’s parent
+
+
+                
+p[v] is used to build the tree, d[v] contains the cost to
+get to v. This version of Bellman-Ford is adapted for a
+weighted, directed, non-negative graph. This algorithm
+runs at O(|V ||E|).
