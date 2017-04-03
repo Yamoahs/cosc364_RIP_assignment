@@ -21,8 +21,8 @@ VALID_PORTS =  range(1024, 64001)
 # Get the arguments list
 args = (sys.argv)
 
-#Flag to make sure stdin arguemtents
-stdin_successful = False
+#Flag for succesful load of config file
+config_successful = False
 
 #Valid File Format
 PATTERN = re.compile("router[0-9]+_config")
@@ -46,13 +46,26 @@ if len(args) == 2:
             print("whoop whoop")
             #Open File in normal mode
             config_file = open(path, 'r')
-            stdin_successful = True
+            config_successful = True
         else:
             print("FILE ERROR: File does not exist")
             quit()
 else:
      print("INPUT ERROR: No Router Config file specified")
      quit()
+
+#TODO Do we want to check each file to make sure it has the 3 fields? (id, in/out)
+##FUNCTION
+if config_successful:
+    info = []
+    for line in config_file:
+        info.append(line.split())
+    print(info)
+for i in info[2]:
+    print(i)
+
+##END OF FUNCTION
+
 
 #closing the file
 config_file.close()
