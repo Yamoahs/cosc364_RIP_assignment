@@ -54,16 +54,37 @@ else:
      print("INPUT ERROR: No Router Config file specified")
      quit()
 
+################################################################################
+
 #TODO Do we want to check each file to make sure it has the 3 fields? (id, in/out)
 ##FUNCTION
 if config_successful:
     info = []
     for line in config_file:
         info.append(line.split())
-    print(info)
-for i in info[2]:
-    print(i)
+    # print("info", info)
 
+##collect the router ID
+router_id = info[0][1]
+
+##loop through the input Ports
+input_ports = []
+for port_numbr in info[1][1:]:
+    if port_numbr[-1] == ",":
+        port_numbr = port_numbr[:-1]
+    input_ports.append(int(port_numbr))
+
+
+##loop through the output info
+output_ports = []
+for port_numbr in info[2][1:]:
+    output_ports.append(port_numbr.split("-"))
+    # print(port_numbr)
+
+
+print("Router ID: ", router_id)
+print("Input Ports: ", input_ports)
+print("Output Ports: ", output_ports)
 ##END OF FUNCTION
 
 
