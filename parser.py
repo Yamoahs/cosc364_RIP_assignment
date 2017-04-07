@@ -25,7 +25,7 @@ args = (sys.argv)
 config_successful = False
 
 #Valid File Format
-PATTERN = re.compile("router[0-9]+_config")
+CONFIG_PATTERN = re.compile("router[0-9]+_config")
 
 #### /END OF GLOBAL VARIABLES
 
@@ -37,7 +37,7 @@ PATTERN = re.compile("router[0-9]+_config")
 if len(args) == 2:
     filename = args[1]
     path = "./config_files/" + filename
-    if not PATTERN.match(filename):
+    if not CONFIG_PATTERN.match(filename):
         print("FILE ERROR: File not a valid Configuration format")
         quit()
     else:
@@ -61,7 +61,11 @@ else:
 if config_successful:
     info = []
     for line in config_file:
-        info.append(line.split())
+        #Filters out blank lines and comments. Comments start with "#"
+        if not re.search(r'^\s|^#.*', line):
+            info.append(line.split())
+        # else:
+        #     print("comment found")
     # print("info", info)
 
 ##collect the router ID
