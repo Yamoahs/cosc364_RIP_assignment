@@ -2,7 +2,7 @@
 # File: parser.py
 # Author: sy, jl
 # Date created: 27/03/17
-# Date Modified: 3/04/17
+# Date Modified: 15/04/17
 ################################################################################
 import sys
 import os.path
@@ -28,7 +28,6 @@ load_successful = False
 config_successful = True
 
 #Flag for valid customer timer parameter
-custom_timer = False
 valid_timer = False
 
 #Valid File Format
@@ -80,32 +79,35 @@ if load_successful:
             config_info.append(line.split())
     # print(config_info)
 
-    ##collect the router ID
-    if config_info[0][0] != "router-id" and len(config_info[0]) != 2:
-        config_successful = False
-        print("ROUTER-ID ERROR")
+    if 3 < len(config_info) < 4:
+        print("CONFIG ERROR: Router is missing or containing extra parameters")
         quit()
-
-    if config_info[1][0] != "input-ports" and len(config_info[1]) < 2:
-        config_successful = False
-        print("INPUT-PORT(S) ERROR")
-        quit()
-
-    if config_info[2][0] != "output-ports" and len(config_info[2]) < 2:
-        config_successful = False
-        print("INPUT-PORT(S) ERROR")
-        quit()
-
-
-    ##Check if timer values have been specified in the config file
-    if len(config_info) == 4:
-        custom_timer = True
-        if config_info[3][0] != "timer" and len(config_info[3]) != 2:
+    else:
+        ##collect the router ID
+        if config_info[0][0] != "router-id" and len(config_info[0]) != 2:
             config_successful = False
-            print("TIMER ERROR")
+            print("ROUTER-ID ERROR")
             quit()
-        else:
-            valid_timer = True
+
+        if config_info[1][0] != "input-ports" and len(config_info[1]) < 2:
+            config_successful = False
+            print("INPUT-PORT(S) ERROR")
+            quit()
+
+        if config_info[2][0] != "output-ports" and len(config_info[2]) < 2:
+            config_successful = False
+            print("INPUT-PORT(S) ERROR")
+            quit()
+
+        ##Check if timer values have been specified in the config file
+        if len(config_info) == 4:
+            print(config_info[3], 'len:', len(config_info[3]))
+            if (len(config_info[3]) != 2) or config_info[3][0] != "timer":
+                config_successful = False
+                print("TIMER ERROR")
+                quit()
+            else:
+                valid_timer = True
 
 ##Set all the variables
 if config_successful:
@@ -129,7 +131,7 @@ if config_successful:
         output_ports[output] = list(map(int, output_ports[output]))
 
     #Set timer if timer parameters have been provided
-    if custom_timer and valid_timer:
+    if  valid_timer:
         timer = config_info[3][1]
         print_config(router_id, input_ports, output_ports, timer)
 
