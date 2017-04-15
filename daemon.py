@@ -95,6 +95,9 @@ def info_check(config_file, load_successful):
             else:
                 valid_timer = True
 
+    #closing the file
+    config_file.close()
+
     return config_info, config_successful, valid_timer
 
 
