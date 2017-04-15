@@ -37,7 +37,6 @@ def load_file(args):
         else:
             #Check if config file exists
             if os.path.isfile(path):
-                print("whoop whoop")
                 #Open File in normal mode
                 config_file = open(path, 'r')
                 load_successful = True
@@ -131,7 +130,8 @@ def set_params(config_info, config_successful, valid_timer):
             return(router_id, input_ports, output_ports, timer)
 
 
-config_file, load_successful = load_file(args)
-config_info, config_successful, valid_timer = info_check(config_file, load_successful)
-parameters = set_params(config_info, config_successful, valid_timer)
-print(parameters)
+def get_params(args):
+    config_file, load_successful = load_file(args)
+    config_info, config_successful, valid_timer = info_check(config_file, load_successful)
+    parameters = set_params(config_info, config_successful, valid_timer)
+    return(parameters)
