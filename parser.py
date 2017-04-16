@@ -96,6 +96,9 @@ def info_check(config_file, load_successful):
 
 def set_params(config_info, config_successful, valid_timer):
     ##Set all the variables
+
+    #valid Port no.
+    VALID_PORTS =  range(1024, 64001)
     if config_successful:
         #Router ID
         router_id = config_info[0][1]
@@ -105,7 +108,11 @@ def set_params(config_info, config_successful, valid_timer):
         for port_numbr in config_info[1][1:]:
             if port_numbr[-1] == ",":
                 port_numbr = port_numbr[:-1]
-            input_ports.append(int(port_numbr))
+            if int(port_numbr) not in VALID_PORTS:
+                print("PORT ERROR: An In-port number not within vald range")
+                quit()
+            else:
+                input_ports.append(int(port_numbr))
 
         ##loop through the output config_info
         output_ports = []
@@ -115,6 +122,10 @@ def set_params(config_info, config_successful, valid_timer):
             output_ports.append(port_numbr.split("-"))
         for output in range(len(output_ports)):
             output_ports[output] = list(map(int, output_ports[output]))
+        for port_numbr in output_ports:
+            if int(port_numbr[0]) not in VALID_PORTS:
+                print("PORT ERROR: an Out-port number not within vald range")
+                quit()
 
         #Set timer if timer parameters have been provided
         if  valid_timer:
