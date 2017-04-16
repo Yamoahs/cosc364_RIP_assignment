@@ -2,12 +2,12 @@
 # File: daemon.py
 # Author: sy, jl
 # Date created: 15/04/17
-# Date Modified: 15/04/17
+# Date Modified: 16/04/17
 ################################################################################
 import sys
 import os.path
 import re
-# import parser
+import parser
 
 ################################################################################
 ## Global variables
