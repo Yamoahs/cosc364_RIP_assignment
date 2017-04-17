@@ -25,6 +25,8 @@ class Router_connection():
                 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             except socket.error as e:
                 print(str(e))
+
+        # TODO: Close Sockets before testing
         return self.input_sockets
 
 
