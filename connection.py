@@ -55,6 +55,8 @@ class Router_connection():
         print("Router ID: ", self.router_id)
         print("Input Ports: ", self.input_ports)
         print("Output Ports & metrics: ", self.output_ports)
-        print("Custom Timer: ",self.timer)
+        print("Custom Timer: ", self.timer)
         print("\n Input Sockets:\n", self.input_sockets)
-        # in_sockets()
+        print("\n")
+        return self.router_id, self.input_ports, self.output_ports, self.timer,\
+        self.input_sockets
