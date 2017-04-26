@@ -8,26 +8,6 @@ import os.path
 args = (sys.argv)
 
 HOST = "127.0.0.1"
-data = "Hello from router {}".format(args[1])
-# PORTA = 2025
-# PORTB = 2026
-#
-#
-# inputt = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# output = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#
-# #Bind input on either end to listen
-# inputt.bind((HOST, PORTA))
-# output.bind((HOST, PORTB))
-#
-# def send_data(socket, data, port):
-#     socket.sendto(data.encode('utf-8'), (HOST, port))
-#     print("sent ", data)
-#
-# def recv_data(socket):
-#     available = select.select(socket, [], [], 0.1) # wait for 100ms, only interested in reading
-#     data = socket.recv(1024)
-#     print(data.decode('utf-8'))
 
 
 #
@@ -83,11 +63,28 @@ class Router:
             self.neighbour_ports[next_hop] = port
 
     def send_data(self, data):
-        for out_sock in self.output_sockets:
-        out_sock.sendto(data.encode('utf-8'), (HOST, neighbour_ports[out_sock]))
-        print("sent ", data)
+        for next_hop, socket in self.output_sockets.items():
+            socket.sendto(data.encode('utf-8'), (HOST, self.neighbour_ports[next_hop]))
+            print("sent: ", data)
 
     def recv_data(self):
-        available = select.select(socket, [], [], 0.1) # wait for 100ms, only interested in reading
-        data = available.recv(1024)
-        print(data.decode('utf-8'))
+        available = select.select(self.input_sockets, [], [], 0.1) # wait for 100ms, only interested in reading
+        serials = []
+        for socket in available:
+            print("sock", socket)
+            serials.append(self.read_data(socket))
+
+    def read_data(self, in_socket):
+        data = in_socket.recv(1024)
+        return data.decode('utf-8')
+
+    def close_sockets(self):
+        for socket in self.input_sockets:
+            socket.close()
+        for socket in self.output_sockets:
+            self.output_sockets[socket].close()
+
+    def return_data(self):
+        return self.router_id, self.input_ports, self.output_ports, self.timer,\
+        self.input_sockets, self.output_sockets, self.neigbour_dist,\
+        self.neighbour_ports
