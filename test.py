@@ -17,9 +17,11 @@ router_id, input_ports, output_ports, timer, input_sockets, output_sockets,\
 neigbour_dist, neighbour_ports = router.return_data()
 data = "hello Reciever from router {}".format(router_id)
 
-print(input_sockets)
-router.send_data(data)
-recieved = router.recv_data()
+while True:
+    # print(input_sockets)
+    router.send_data(data)
+    recieved = router.recv_data()
+    print("\nrecieved data: ", recieved)
 
 # # router.in_sockets()
 # # router.out_sockets()

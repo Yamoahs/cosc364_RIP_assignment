@@ -68,15 +68,19 @@ class Router:
             print("sent: ", data)
 
     def recv_data(self):
-        available = select.select(self.input_sockets, [], [], 0.1) # wait for 100ms, only interested in reading
+        available,_,_ = select.select(self.input_sockets, [], []) # wait for 100ms, only interested in reading
         serials = []
         for socket in available:
-            print("sock", socket)
-            serials.append(self.read_data(socket))
+            # print("sock", socket)
+            # serials.append(self.read_data(socket))
+            data = socket.recv(1024)
+            serials.append(data.decode('utf-8'))
+        return serials
+            # print(data.decode('utf-8'))
 
-    def read_data(self, in_socket):
-        data = in_socket.recv(1024)
-        return data.decode('utf-8')
+    # def read_data(self, in_socket):
+    #     data = in_socket.recv(1024)
+    #     return data.decode('utf-8')
 
     def close_sockets(self):
         for socket in self.input_sockets:
