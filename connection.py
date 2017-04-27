@@ -20,7 +20,7 @@ HOST =  "127.0.0.1"
 ################################################################################
 
 
-class Router_connection():
+class Router_connection:
     """docstring for Router_connection."""
     def __init__(self, parameters):
         self.router_id, self.input_ports, self.output_ports, self.timer \
