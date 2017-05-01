@@ -11,7 +11,7 @@ import sys
 def update_timer(u_timer):
     t = u_timer
     #TODO may have to randomise the offset
-    time.sleep(1) # Offset the update timer  
+    time.sleep(1) # Offset the update timer
     while t != 0:
         time.sleep(1)
         t  -= 1
@@ -27,6 +27,7 @@ def garbage_collection_timer(g_timer):
     pass
 
 
-update_timer(5)
+update_timer(2)
 
 
+#changed file
