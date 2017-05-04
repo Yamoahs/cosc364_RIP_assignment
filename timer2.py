@@ -7,17 +7,20 @@ class Timers(object):
             store all the info. The details are for you to work out. I recommend
             you do not store duration, but end-time: it makes calculations easier.
         """
-        pass
+        self.all_timers = {}
+        self.time = None
+        self.running = []
+
 
     def add_timer(self, duration, id, message):
         """ Add a timer of the given duration and (unique) ID.
             It should also have some information stored with it.
         """
-        pass
+        self.all_timers[id] = (duration, message)
 
     def remove_timer(self, id):
         """ The timer with the given ID should be removed. That’s it really."""
-        pass
+        del self.all_timers[id]
 
     def get_timeout(self):
         """ Calculate the amount of time left until the next timer will go off.
@@ -33,6 +36,42 @@ class Timers(object):
             this function was called. It should also remove them from the collection.
         """
         pass
+
+    def start(self, id):
+        """Set the running flag to True"""
+        self.time = time.time()
+        self.running.append(id)
+
+    # def finished(self, id):
+    #     """Checks if the timer has reached it's duration time"""
+    #     if id in self.running and time.time() >= (self.time + self.duration):
+    #         self.running.remove(id)
+    #         return True
+    #     # return self.running and time.time() >= (self.time + self.duration)
+    #     else:
+    #         return False
+
+    def finished(self, id):
+        """Checks if the timer has reached it's duration time"""
+        duration = self.all_timers[id][0]
+        message = self.all_timers[id][1]
+        if id in self.running and time.time() >= (self.time + duration):
+            self.running.remove(id)
+            print("Duration: {}\nMessage: {}".format(duration, message))
+            return True
+        # return self.running and time.time() >= (self.time + self.duration)
+        else:
+            return False
+
+    def retun_timers(self):
+        """Returns dictionary of all remaining timers
+        """
+        return self.all_timers
+
+    def retun_running_timers(self):
+        """Returns dictionary of all remaining timers
+        """
+        return self.running
 
 
 if __name__ == '__main__':
