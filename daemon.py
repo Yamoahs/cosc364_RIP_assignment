@@ -18,6 +18,9 @@ from time import sleep, time
 # Get the arguments list
 args = (sys.argv)
 
+# Default Timers
+DEFAULT_UPDATE_TIMER =30
+
 #### /END OF GLOBAL VARIABLES
 ################################################################################
 
@@ -26,6 +29,7 @@ router = connection.Router(param)
 router_id, input_ports, output_ports, timer, input_sockets, output_sockets,\
 neigbour_dist, neighbour_ports = router.return_data()
 data = "hello Reciever from router {}".format(router_id)
+
 
 while True:
     # print(input_sockets)
