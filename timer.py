@@ -49,7 +49,7 @@ class Timers(object):
             store all the info. The details are for you to work out. I recommend
             you do not store duration, but end-time: it makes calculations easier.
         """
-        self.time = time.time()
+        self.time = None
         self.tag = tag
         self.duration = duration
         self.label = label
@@ -83,6 +83,7 @@ class Timers(object):
 
     def start(self):
         """Set the running flag to True"""
+        self.time = time.time()
         self.running = True
 
     def stop(self):
@@ -100,7 +101,12 @@ class Timers(object):
 
 
     def finished(self):
+        """Checks if the timer has reached it's duration time"""
         return self.running and time.time() >= (self.time + self.duration)
+
+    def return_info(self):
+        """Returns timer information"""
+        return self.tag, self.duration, self.label, self.running
 
 
 if __name__ == '__main__':
