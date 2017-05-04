@@ -2,7 +2,9 @@
 # File: connection.py
 # Author: sy, jl
 # Date created: 17/04/17
-# Date Modified: 17/04/17
+# Date Modified: 04/05/17
+# In Param: Parsed router info from parser.py
+# Out Param: Input Sockets, Output Sockets, neighbour distances & Ports
 ################################################################################
 import os.path
 import select
@@ -20,40 +22,27 @@ HOST =  "127.0.0.1"
 ################################################################################
 
 
-class Router_connection:
-    """docstring for Router_connection."""
+class Router(object):
+    '''Class Descriptor'''
     def __init__(self, parameters):
         self.router_id, self.input_ports, self.output_ports, self.timer \
         = parameters
         self.input_sockets = []
         self.output_sockets = {}
         self.neigbour_dist = {}
+        self.neighbour_ports = {}
 
-        # #Create the input sockets
-        # for i, port in enumerate(self.input_ports):
-        #     try:
-        #         self.input_sockets[i] =\
-        #         socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #         #Bind the sockets
-        #         self.input_sockets[i].bind((HOST, port))
-        #         # #Connect the sockets
-        #         # self.input_sockets[i].connect((HOST, neighbour[0]))
-        #     except socket.error as e:
-        #         print(str(e))
-
-        #Create the input sockets
+        #Create the input Sockets
         for port in self.input_ports:
             try:
                 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 #Bind the sockets
                 s.bind((HOST, port))
                 self.input_sockets.append(s)
-                # #Connect the sockets
-                # self.input_sockets[i].connect((HOST, neighbour[0]))
             except socket.error as e:
                 print(str(e))
 
-        #Create output Sockets and neighbour distances
+        #Create the output sockets and neighbour distances
         for output in self.output_ports:
             port, metric, next_hop = output
             #Create the sockets
@@ -65,27 +54,29 @@ class Router_connection:
             except socket.error as e:
                 print(str(e))
 
-            #neighbour distances
+            #neighbour distances & port
             self.neigbour_dist[next_hop] = metric
+            self.neighbour_ports[next_hop] = port
 
+    def send_data(self, data):
+        for next_hop, socket in self.output_sockets.items():
+            socket.sendto(data.encode('utf-8'), (HOST, self.neighbour_ports[next_hop]))
+            print("sent: ", data)
 
-    def recieve_data(self):
-        available = select.select(self.input_sockets, [], [], 0.1)[0] # wait for 100ms, only interested in reading
+    def recv_data(self):
+        available,_,_ = select.select(self.input_sockets, [], []) # wait for 100ms, only interested in reading
         serials = []
         for socket in available:
-            serials.append(self.read_data(socket))
+            # print("sock", socket)
+            # serials.append(self.read_data(socket))
+            data = socket.recv(1024)
+            serials.append(data.decode('utf-8'))
         return serials
+            # print(data.decode('utf-8'))
 
-    def read_data(self, in_sock):
-        data = in_socket.recv(4096) # only try to read at most 4096
-        return data.decode('utf-8') # decode it using utf-8
-
-    def send_table(self):
-        data = 'hello from router {}'.format(self.router_id)
-        for port, metric, next_hop in self.output_ports:
-            output = self.output_sockets[next_hop]
-            output.sendto(data.encode('utf-8'), (HOST, port))
-
+    # def read_data(self, in_socket):
+    #     data = in_socket.recv(1024)
+    #     return data.decode('utf-8')
 
     def close_sockets(self):
         for socket in self.input_sockets:
@@ -93,13 +84,7 @@ class Router_connection:
         for socket in self.output_sockets:
             self.output_sockets[socket].close()
 
-    def display_router_config(self):
-        # print("Router ID: ", self.router_id)
-        # print("Input Ports: ", self.input_ports)
-        # print("Output Ports & metrics: ", self.output_ports)
-        # print("Custom Timer: ", self.timer)
-        # print("\nInput Sockets:\n", self.input_sockets)
-        # print("\nOutput Sockets:\n", self.output_sockets)
-        # print("\n")
+    def return_data(self):
         return self.router_id, self.input_ports, self.output_ports, self.timer,\
-        self.input_sockets, self.output_sockets, self.neigbour_dist
+        self.input_sockets, self.output_sockets, self.neigbour_dist,\
+        self.neighbour_ports
