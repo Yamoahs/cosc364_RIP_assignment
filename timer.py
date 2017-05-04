@@ -44,13 +44,13 @@ def garbage_collection_timer(g_timer):
 
 class Timers(object):
 
-    def __init__(self, duration, tag, label):
+    def __init__(self, duration, id, label):
         """ Set up some basics such as a collection of timers that you can use to
             store all the info. The details are for you to work out. I recommend
             you do not store duration, but end-time: it makes calculations easier.
         """
         self.time = None
-        self.tag = tag
+        self.id = id
         self.duration = duration
         self.label = label
         self.running = False
@@ -102,13 +102,13 @@ class Timers(object):
 
     def finished(self):
         """Checks if the timer has reached it's duration time"""
-        if self.running and time.time() >= (self.time + self.duration):
-            self.running = False
+        # if self.running and time.time() >= (self.time + self.duration):
+            # self.running = False
         return self.running and time.time() >= (self.time + self.duration)
 
     def return_info(self):
         """Returns timer information"""
-        return self.tag, self.duration, self.label, self.running
+        return self.id, self.duration, self.label, self.running
 
 
 if __name__ == '__main__':
