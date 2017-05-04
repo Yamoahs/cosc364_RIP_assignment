@@ -61,7 +61,7 @@ class Router(object):
     def send_data(self, data):
         for next_hop, socket in self.output_sockets.items():
             socket.sendto(data.encode('utf-8'), (HOST, self.neighbour_ports[next_hop]))
-            print("sent: ", data)
+            # print("sent: ", data)
 
     def recv_data(self):
         available,_,_ = select.select(self.input_sockets, [], []) # wait for 100ms, only interested in reading
