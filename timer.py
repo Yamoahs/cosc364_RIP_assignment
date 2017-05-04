@@ -38,9 +38,9 @@ def garbage_collection_timer(g_timer):
         print(t)
 
 
-update_timer(5)
-timeout(5)
-garbage_collection_timer(5)
+# update_timer(5)
+# timeout(5)
+# garbage_collection_timer(5)
 
 class Timers(object):
 
@@ -96,8 +96,8 @@ class Timers(object):
     def get_timeout(self):
         """ Calculate the amount of time left until the next timer will go off.
         """
-        return ()(self.time + self.duration) - time.time())
-        
+        return ((self.time + self.duration) - time.time())
+
 
     def finished(self):
         return self.running and time.time() >= (self.time + self.duration)
