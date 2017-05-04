@@ -102,6 +102,8 @@ class Timers(object):
 
     def finished(self):
         """Checks if the timer has reached it's duration time"""
+        if self.running and time.time() >= (self.time + self.duration):
+            self.running = False
         return self.running and time.time() >= (self.time + self.duration)
 
     def return_info(self):
