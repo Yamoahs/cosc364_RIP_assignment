@@ -23,7 +23,7 @@ def load_file(args):
 
     if len(args) == 2:
         filename = args[1]
-        path = "./config_files/" + filename
+        path = "./config_files/" + filename + ".cfg"
         if not CONFIG_PATTERN.match(filename):
             print("FILE ERROR: File not a valid Configuration format")
             quit()
