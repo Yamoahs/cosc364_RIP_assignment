@@ -11,6 +11,7 @@ import parser
 import connection
 import socket
 from time import sleep, time
+from timer import *
 
 ################################################################################
 ## Global variables
@@ -29,13 +30,28 @@ router = connection.Router(param)
 router_id, input_ports, output_ports, timer, input_sockets, output_sockets,\
 neigbour_dist, neighbour_ports = router.return_data()
 data = "hello Reciever from router {}".format(router_id)
+update_timer = Timers(10, 1, "update timer")
+timer_id, duration, label, running = update_timer.return_info()
+update_timer.start()
 
-
+runs = 0
+router.send_data(data)
 while True:
+
+    sleep(0.05)
     # print(input_sockets)
-    router.send_data(data)
-    recieved = router.recv_data()
-    print("\nrecieved data: ", recieved)
+    print("Router: {} run: {}\n".format(router_id, runs))
+    print(time.strftime('%H:%M:%S'))
+    # router.send_data(data)
+    if update_timer.finished():
+        print("got here")
+        router.send_data(data)
+        runs += 1
+        update_timer.reset()
+        print(label, " complete. start again")
+        recieved = router.recv_data()
+        print("\nrecieved data: ", recieved)
+    print("Still waiting")
 
 
 
