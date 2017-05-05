@@ -29,6 +29,8 @@ class Routing_table(object):
         for neighbour in self.neighbour_dist:
             self.table_entry[neighbour] = \
                           (neighbour, self.neighbour_dist[neighbour], neighbour)
+        #Add host router to routing table
+        self.table_entry[int(self.router_id)] = (int(self.router_id), 0, int(self.router_id))
 
 
     def add_route(self):
