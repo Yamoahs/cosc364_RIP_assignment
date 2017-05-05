@@ -44,7 +44,7 @@ class Routing_table(object):
 
 
     def print_table(self):
-        label1 = "   Router {} Routing Table  {}  ".format(self.router_id,\
+        label1 = "      Router {} Routing Table  {}  ".format(self.router_id,\
                   time.strftime('%H:%M:%S'))
         label2 = "|    Dest     |    Cost     |    Nxt.Hop    |"
         line =   "|___________________________________________|"
