@@ -11,6 +11,7 @@ import select
 import socket
 import struct
 import sys
+from serialise import *
 
 ###############################################################################
 ## Global variables
@@ -59,8 +60,9 @@ class Router(object):
             self.neighbour_ports[next_hop] = port
 
     def send_data(self, data):
+        serialise = pack(data)
         for next_hop, socket in self.output_sockets.items():
-            socket.sendto(data.encode('utf-8'), (HOST, self.neighbour_ports[next_hop]))
+            socket.sendto(serialise, (HOST, self.neighbour_ports[next_hop]))
             # print("sent: ", data)
 
     def recv_data(self):
@@ -70,7 +72,8 @@ class Router(object):
             # print("sock", socket)
             # serials.append(self.read_data(socket))
             data = socket.recv(1024)
-            serials.append(data.decode('utf-8'))
+            deserialise = convert(unpack(data))
+            serials.append(deserialise)
         return serials
             # print(data.decode('utf-8'))
 

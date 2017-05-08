@@ -46,27 +46,22 @@ else:
     update_timer = Timers(update_timer)
 
 table = Routing_table(router_id, neigbour_dist, timeout_timer, garbage_timer)
-data = "hello Reciever from router {}".format(router_id)
+# data = "hello Reciever from router {}".format(router_id)
+data = table.routes
 update_timer.start()
 
-runs = 0
 router.send_data(data)
 table.print_table()
 while True:
-
     sleep(0.05)
-    # print(input_sockets)
-    # print("Router: {} run: {}\n".format(router_id, runs))
-    # print(time.strftime('%H:%M:%S'))
-    # router.send_data(data)
     if update_timer.finished():
-        # print("got here")
+        data = table.routes
         table.print_table()
         router.send_data(data)
-        runs += 1
         update_timer.reset()
         recieved = router.recv_data()
         print("\nrecieved data: ", recieved)
+        print
     # print("Still waiting")
 
 
