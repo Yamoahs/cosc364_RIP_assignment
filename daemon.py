@@ -46,7 +46,6 @@ else:
     update_timer = Timers(update_timer)
 
 table = Routing_table(router_id, neigbour_dist, timeout_timer, garbage_timer)
-# data = "hello Reciever from router {}".format(router_id)
 data = table.routes
 update_timer.start()
 

@@ -60,6 +60,11 @@ class Routing_table(object):
         print(line)
 
 
+    def update_table(self, serial, neighbours):
+        pass
+
+
+
 if __name__ == '__main__':
     r = {6: 24, 7: 34, 2:44}
     table = Routing_table(1, r)

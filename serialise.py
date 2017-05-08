@@ -22,4 +22,5 @@ def convert(data):
         data[int(node)] = data.pop(node)
         return data
 
-# recieved data:  [{1: [1, 0, 1]}, {4: [4, 0, 4]}]
+# r = {1: [1, 0, 1], 4: [4, 0, 4]}
+# print(convert(r))
