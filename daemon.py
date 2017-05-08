@@ -12,6 +12,7 @@ import connection
 import socket
 from time import sleep, time
 from timer import *
+from routing_table import *
 
 ################################################################################
 ## Global variables
@@ -20,38 +21,53 @@ from timer import *
 args = (sys.argv)
 
 # Default Timers
-DEFAULT_UPDATE_TIMER =30
+DEFAULT_UPDATE_TIMER = 5
+DEFAULT_TIMEOUT_TIMER = 180
+DEFAULT_GARBAGE_TIMER = 120
 
 #### /END OF GLOBAL VARIABLES
 ################################################################################
 
 param = parser.get_params(args)
 router = connection.Router(param)
-router_id, input_ports, output_ports, timer, input_sockets, output_sockets,\
-neigbour_dist, neighbour_ports = router.return_data()
+router_id, input_ports, output_ports, update_timer, timeout_timer,\
+garbage_timer, input_sockets, output_sockets, neigbour_dist, neighbour_ports = \
+                                                            router.return_data()
+##Set the timeout and garabage timer if not specified in the config file
+if not timeout_timer:
+    timeout_timer = DEFAULT_TIMEOUT_TIMER
+
+if not garbage_timer:
+    garbage_timer = DEFAULT_GARBAGE_TIMER
+
+if not update_timer:
+    update_timer = Timers(DEFAULT_UPDATE_TIMER)
+else:
+    update_timer = Timers(update_timer)
+
+table = Routing_table(router_id, neigbour_dist, timeout_timer, garbage_timer)
 data = "hello Reciever from router {}".format(router_id)
-update_timer = Timers(10, 1, "update timer")
-timer_id, duration, label, running = update_timer.return_info()
 update_timer.start()
 
 runs = 0
 router.send_data(data)
+table.print_table()
 while True:
 
     sleep(0.05)
     # print(input_sockets)
-    print("Router: {} run: {}\n".format(router_id, runs))
-    print(time.strftime('%H:%M:%S'))
+    # print("Router: {} run: {}\n".format(router_id, runs))
+    # print(time.strftime('%H:%M:%S'))
     # router.send_data(data)
     if update_timer.finished():
-        print("got here")
+        # print("got here")
+        table.print_table()
         router.send_data(data)
         runs += 1
         update_timer.reset()
-        print(label, " complete. start again")
         recieved = router.recv_data()
         print("\nrecieved data: ", recieved)
-    print("Still waiting")
+    # print("Still waiting")
 
 
 

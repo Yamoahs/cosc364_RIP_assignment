@@ -8,51 +8,15 @@
 import time
 import sys
 
-def update_timer(u_timer):
-    print("update timer")
-    t = u_timer
-    #TODO may have to randomise the offset
-    time.sleep(1) # Offset the update timer
-    while t != 0:
-        time.sleep(1)
-        t  -= 1
-        print(t)
-
-def timeout(t_timer):
-    # Timeout time = 180sec
-    print("timeout timer")
-    t = t_timer
-    while t != 0:
-        time.sleep(1)
-        t  -= 1
-        print(t)
-
-
-def garbage_collection_timer(g_timer):
-    #Garbage Timeout time =  120sec
-    print("garbage collection timer")
-    t = g_timer
-    while t != 0:
-        time.sleep(1)
-        t  -= 1
-        print(t)
-
-
-# update_timer(5)
-# timeout(5)
-# garbage_collection_timer(5)
-
 class Timers(object):
 
-    def __init__(self, duration, id, label):
+    def __init__(self, duration):
         """ Set up some basics such as a collection of timers that you can use to
             store all the info. The details are for you to work out. I recommend
             you do not store duration, but end-time: it makes calculations easier.
         """
         self.time = None
-        self.id = id
         self.duration = duration
-        self.label = label
         self.running = False
 
 
@@ -108,7 +72,7 @@ class Timers(object):
 
     def return_info(self):
         """Returns timer information"""
-        return self.id, self.duration, self.label, self.running
+        return self.duration, self.running
 
 
 if __name__ == '__main__':

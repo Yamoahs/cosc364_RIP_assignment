@@ -25,8 +25,8 @@ HOST =  "127.0.0.1"
 class Router(object):
     '''Class Descriptor'''
     def __init__(self, parameters):
-        self.router_id, self.input_ports, self.output_ports, self.timer \
-        = parameters
+        self.router_id, self.input_ports, self.output_ports, self.update_timer,\
+                             self.timeout_timer, self.garbage_timer = parameters
         self.input_sockets = []
         self.output_sockets = {}
         self.neigbour_dist = {}
@@ -85,6 +85,7 @@ class Router(object):
             self.output_sockets[socket].close()
 
     def return_data(self):
-        return self.router_id, self.input_ports, self.output_ports, self.timer,\
+        return self.router_id, self.input_ports, self.output_ports,\
+        self.update_timer, self.timeout_timer, self.garbage_timer,\
         self.input_sockets, self.output_sockets, self.neigbour_dist,\
         self.neighbour_ports
