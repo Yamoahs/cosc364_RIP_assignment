@@ -61,8 +61,6 @@ while True:
         update_timer.reset()
         recieved = router.recv_data()
         print("\nrecieved data: ", recieved)
-        print
-    # print("Still waiting")
 
 
 
