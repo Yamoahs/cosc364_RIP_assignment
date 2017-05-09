@@ -8,7 +8,7 @@ import timer
 
 class Route(object):
 
-    def __init__(self, dest, nxt_hop, cost, timeout, garbage):
+    def __init__(self, dest, cost, nxt_hop, timeout, garbage):
         self.dest = dest
         self.nxt_hop = nxt_hop
         self.cost = min(16, cost)
@@ -22,7 +22,9 @@ class Route(object):
 
     def update(self, nxt_hop, cost):
         changed = False
-        if cost < self.cost or self.nxt_hop == nxt_hop: # only update if new cost is smaller or if the original throughput is the updater
+        # only update if new cost is smaller or if the original throughput
+        # is the updater
+        if cost < self.cost or self.nxt_hop == nxt_hop:
             changed = cost != self.cost
             self.nxt_hop = nxt_hop
             self.cost = min(16, cost)
