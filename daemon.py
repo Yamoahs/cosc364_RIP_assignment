@@ -90,19 +90,19 @@ def main():
         table.add_route(route, router.neigbour_dist[route], route)
     table.print_table()
     update_timer.start()
-    router.send_data(table)
+    # router.send_data(table)
     while True:
         sleep(0.05)
         updated = False
         updated = table.route_timers()
-        if update_timer.finished():
+        if update_timer.finished(): #general timer that keeps track of time for updates
             router.send_data(table)
             update_timer.reset()
         recieved = router.recv_data()
         for serial in recieved:
             # print("serial", serial)
             #try to update the table will all teh serial data
-            updated = updated or table.update_table(serial, neighbour_ports)
+            updated = updated or table.update_table(serial, neighbour_ports, neigbour_dist)
         if updated: #triggered updates
             router.send_data(table)
             table.print_table()

@@ -75,7 +75,7 @@ class Routing_table(object):
             serial += "{},{},{}|".format(route.dest, cost, route.nxt_hop)
         return bytes(serial[:-1], 'utf-8') # remove last |, encode as bytes in utf-8
 
-    def update_table(self, serial, neighbours):
+    def update_table(self, serial, neighbours, neigh_dist):
         recv_data = unpack(serial)
         # print("recv_data",recv_data)
         change = False
@@ -84,10 +84,12 @@ class Routing_table(object):
             routes = recv_data[1]
             sender = self.routes.get(sentfrm_router_id, None)
             # Check if serial data is a Neighbour and not already in the routing table
-            neighbour = neighbours.get(sentfrm_router_id, None)
+            neighbour = neigh_dist.get(sentfrm_router_id, None)
             if not sender and neighbour:
-                self.add_route(sentfrm_router_id, neighbour_dist[sentfrm_router_id]\
+                self.add_route(sentfrm_router_id, neigh_dist[sentfrm_router_id]\
                                                                  ,sentfrm_router_id)
+                # self.add_route(sentfrm_router_id, neighbour_dist[sentfrm_router_id]\
+                #                                                  ,sentfrm_router_id)
                 sender = self.routes.get(sentfrm_router_id, None)
             if sender:
                 sender.update(sender.nxt_hop, sender.cost)
