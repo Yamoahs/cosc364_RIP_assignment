@@ -28,14 +28,6 @@ class Routing_table(object):
         self.garbage = garbage
         self.routes = {}
 
-        # for neighbour in self.neighbour_dist:
-        #     self.routes[neighbour] = \
-        #                   Route(neighbour, self.neighbour_dist[neighbour],\
-        #                                   neighbour, self.timeout, self.garbage)
-        # Add host router to routing table
-        # self.routes[int(self.router_id)] = (int(self.router_id), 0, int(self.router_id))
-        # self.routes[self.router_id] = Route(int(self.router_id), 0, int(self.router_id),\
-        #                                              self.timeout, self.garbage)
 
     def add_route(self, dest, cost, nxt_hop):
         """"Add new routing destination to the routing table"""
@@ -88,8 +80,6 @@ class Routing_table(object):
             if not sender and neighbour:
                 self.add_route(sentfrm_router_id, neigh_dist[sentfrm_router_id]\
                                                                  ,sentfrm_router_id)
-                # self.add_route(sentfrm_router_id, neighbour_dist[sentfrm_router_id]\
-                #                                                  ,sentfrm_router_id)
                 sender = self.routes.get(sentfrm_router_id, None)
             if sender:
                 sender.update(sender.nxt_hop, sender.cost)
@@ -98,16 +88,7 @@ class Routing_table(object):
                         change = change or self.add_route(int(dest), int(cost)\
                                           + int(sender.cost), int(sentfrm_router_id))
         return change
-        # for node in serial:
-        #     dst, metric, nxt_hop = serial[node]
-        #     # Check if serial data is a Neighbour and hasnt already been added
-        #     # to the routing table
-        #     if node in neighbours.keys() and node not in routes.keys():
-        #         dest, metric, next_hop = node, neighbour_dist[node], node
-        #         self.add_route(dest, metric, next_hop)
-        #     elif node not in routes.keys():
-        #         self.add_route(dst, metric, nxt_hop)
-        #
+
 
     def route_timers(self):
         routes = {}
@@ -122,13 +103,3 @@ class Routing_table(object):
                 change = True
         self.routes = routes
         return change
-
-
-if __name__ == '__main__':
-    r = {6: 24, 7: 34, 2:44}
-    table = Routing_table(1, r)
-    table.print_table()
-    print(table.routes)
-    table.add_route(8,88,88)
-    table.del_entry(6)
-    table.print_table()

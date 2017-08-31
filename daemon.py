@@ -28,46 +28,6 @@ DEFAULT_GARBAGE_TIMER = 8#15 #120
 #### /END OF GLOBAL VARIABLES
 ################################################################################
 
-# param = parser.get_params(args)
-# router = connection.Router(param)
-# router_id, input_ports, output_ports, update_timer, timeout_timer,\
-# garbage_timer, input_sockets, output_sockets, neigbour_dist, neighbour_ports = \
-#                                                             router.return_data()
-# ##Set the timeout and garabage timer if not specified in the config file
-# if not timeout_timer:
-#     timeout_timer = DEFAULT_TIMEOUT_TIMER
-#
-# if not garbage_timer:
-#     garbage_timer = DEFAULT_GARBAGE_TIMER
-#
-# if not update_timer:
-#     update_timer = Timers(DEFAULT_UPDATE_TIMER)
-# else:
-#     update_timer = Timers(update_timer)
-#
-# table = Routing_table(router_id, neigbour_dist, timeout_timer, garbage_timer)
-# data = table.routes
-# update_timer.start()
-#
-# router.send_data(data)
-# table.print_table()
-# while True:
-#     sleep(0.05)
-#     updated = False
-#     if update_timer.finished():
-#         data = table.routes
-#         table.print_table()
-#         router.send_data(data)
-#         update_timer.reset()
-#         recieved = router.recv_data()
-#         for serial in recieved:
-#             #try to update the table will all teh serial data
-#             updated = updated or table.update_table(serial,neighbour_ports)
-#         if updated:
-#             router.send_data(data)
-#             table.print_table()
-#         print("\nrecieved data: ", recieved)
-
 def main():
     param = parser.get_params(args)
     router = Router(param)

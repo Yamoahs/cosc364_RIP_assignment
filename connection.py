@@ -11,7 +11,6 @@ import select
 import socket
 import struct
 import sys
-from serialise import *
 
 ###############################################################################
 ## Global variables
@@ -33,11 +32,6 @@ class Router(object):
         self.neigbour_dist = {}
         self.neighbour_ports = {}
 
-    # def __str__(self):
-    #     return "(router_id: {}, input_ports: {}, output_ports: {}, update_timer
-    #     Destination: {}, cost: {}, nxt hop: {})".format(self.dest, \
-    #     self.cost, self.nxt_hop)
-
         #Create the input Sockets
         for port in self.input_ports:
             try:
@@ -55,8 +49,6 @@ class Router(object):
             try:
                 self.output_sockets[nxt_hop] =\
                 socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                # #Connect the sockets
-                # self.output_sockets[nxt_hop].connect((HOST, port))
             except socket.error as e:
                 print(str(e))
 
@@ -75,15 +67,11 @@ class Router(object):
         serials = []
         for socket in available:
             # print("sock", socket)
-            # serials.append(self.read_data(socket))
             data = socket.recv(1024)
             data = data.decode('utf-8')
             serials.append(data)
         return serials
 
-    # def read_data(self, in_socket):
-    #     data = in_socket.recv(1024)
-    #     return data.decode('utf-8')
 
     def close_sockets(self):
         for socket in self.input_sockets:
