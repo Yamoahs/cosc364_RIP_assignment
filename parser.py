@@ -49,8 +49,12 @@ def info_check(config_file, load_successful):
     #Flag for valid config file
     config_successful = True
 
-    #Flag for valid customer timer parameter
-    valid_timer = None
+    #Flag for valid customer update timer parameter
+    valid_update_timer = None
+    #Flag for valid customer timeout timer parameter
+    valid_timeout_timer = None
+    #Flag for valid customer garbage timer parameter
+    valid_garbage_timer = None
 
     for line in config_file:
         #Filters out blank lines and comments. Comments start with "#"
@@ -58,7 +62,7 @@ def info_check(config_file, load_successful):
             config_info.append(line.split())
     # print(config_info)
 
-    if 3 < len(config_info) < 4:
+    if 3 < len(config_info) < 6:
         print("CONFIG ERROR: Router is missing or containing extra parameters")
         quit()
     else:
@@ -78,23 +82,45 @@ def info_check(config_file, load_successful):
             print("INPUT-PORT(S) ERROR")
             quit()
 
-        ##Check if timer values have been specified in the config file
+        ##Check if update timer values have been specified in the config file
         if len(config_info) == 4:
             print(config_info[3], 'len:', len(config_info[3]))
-            if (len(config_info[3]) != 2) or config_info[3][0] != "timer":
+            if (len(config_info[3]) != 2) or config_info[3][0] != "update":
                 config_successful = False
-                print("TIMER ERROR")
+                print("TIMER ERROR: Update")
                 quit()
             else:
-                valid_timer = True
+                valid_update_timer = True
+
+        ##Check if timeout timer values have been specified in the config file
+        if len(config_info) == 5:
+            # print(config_info[3], 'len:', len(config_info[3]))
+            if (len(config_info[4]) != 2) or config_info[4][0] != "timeout":
+                config_successful = False
+                print("TIMER ERROR: Timeout")
+                quit()
+            else:
+                valid_timeout_timer = True
+
+        ##Check if garbage timer values have been specified in the config file
+        if len(config_info) == 6:
+            # print(config_info[3], 'len:', len(config_info[3]))
+            if (len(config_info[5]) != 2) or config_info[5][0] != "garbage":
+                config_successful = False
+                print("TIMER ERROR: Timeout")
+                quit()
+            else:
+                valid_garbage_timer = True
 
     #closing the file
     config_file.close()
 
-    return config_info, config_successful, valid_timer
+    return config_info, config_successful, valid_update_timer,\
+                                        valid_timeout_timer, valid_garbage_timer
 
 
-def set_params(config_info, config_successful, valid_timer):
+def set_params(config_info, config_successful,\
+                  valid_update_timer, valid_timeout_timer, valid_garbage_timer):
     ##Set all the variables
 
     #valid Port no.
@@ -127,18 +153,27 @@ def set_params(config_info, config_successful, valid_timer):
                 print("PORT ERROR: an Out-port number not within vald range")
                 quit()
 
-        #Set timer if timer parameters have been provided
-        if  valid_timer:
-            timer = config_info[3][1]
-            return(router_id, input_ports, output_ports, timer)
+        #Set timers if all timer parameters have been provided
+        if  valid_update_timer and valid_timeout_timer and valid_garbage_timer:
+            update_timer = config_info[3][1]
+            timeout_timer = config_info[4][1]
+            garbage_timer = config_info[5][1]
+
+            return(router_id, input_ports, output_ports, update_timer,\
+                                                   timeout_timer, garbage_timer)
 
         else:
-            timer = None
-            return(router_id, input_ports, output_ports, timer)
+            update_timer = None
+            timeout_timer = None
+            garbage_timer = None
+            return(router_id, input_ports, output_ports, update_timer,\
+                                                   timeout_timer, garbage_timer)
 
 
 def get_params(args):
     config_file, load_successful = load_file(args)
-    config_info, config_successful, valid_timer = info_check(config_file, load_successful)
-    parameters = set_params(config_info, config_successful, valid_timer)
+    config_info, config_successful, valid_update_timer, valid_timeout_timer,\
+                  valid_garbage_timer = info_check(config_file, load_successful)
+    parameters = set_params(config_info, config_successful, valid_update_timer,\
+                                       valid_timeout_timer, valid_garbage_timer)
     return(parameters)

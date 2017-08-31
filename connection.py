@@ -11,6 +11,7 @@ import select
 import socket
 import struct
 import sys
+from serialise import *
 
 ###############################################################################
 ## Global variables
@@ -25,12 +26,17 @@ HOST =  "127.0.0.1"
 class Router(object):
     '''Class Descriptor'''
     def __init__(self, parameters):
-        self.router_id, self.input_ports, self.output_ports, self.timer \
-        = parameters
+        self.router_id, self.input_ports, self.output_ports, self.update_timer,\
+                             self.timeout_timer, self.garbage_timer = parameters
         self.input_sockets = []
         self.output_sockets = {}
         self.neigbour_dist = {}
         self.neighbour_ports = {}
+
+    # def __str__(self):
+    #     return "(router_id: {}, input_ports: {}, output_ports: {}, update_timer
+    #     Destination: {}, cost: {}, nxt hop: {})".format(self.dest, \
+    #     self.cost, self.nxt_hop)
 
         #Create the input Sockets
         for port in self.input_ports:
@@ -44,35 +50,36 @@ class Router(object):
 
         #Create the output sockets and neighbour distances
         for output in self.output_ports:
-            port, metric, next_hop = output
+            port, metric, nxt_hop = output
             #Create the sockets
             try:
-                self.output_sockets[next_hop] =\
+                self.output_sockets[nxt_hop] =\
                 socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 # #Connect the sockets
-                # self.output_sockets[next_hop].connect((HOST, port))
+                # self.output_sockets[nxt_hop].connect((HOST, port))
             except socket.error as e:
                 print(str(e))
 
             #neighbour distances & port
-            self.neigbour_dist[next_hop] = metric
-            self.neighbour_ports[next_hop] = port
+            self.neigbour_dist[nxt_hop] = metric
+            self.neighbour_ports[nxt_hop] = port
 
     def send_data(self, data):
-        for next_hop, socket in self.output_sockets.items():
-            socket.sendto(data.encode('utf-8'), (HOST, self.neighbour_ports[next_hop]))
-            print("sent: ", data)
+        # serialise = pack(data)
+        for nxt_hop, socket in self.output_sockets.items():
+            serial = data.serialize(nxt_hop)
+            socket.sendto(serial, (HOST, self.neighbour_ports[nxt_hop]))
 
     def recv_data(self):
-        available,_,_ = select.select(self.input_sockets, [], []) # wait for 100ms, only interested in reading
+        available,_,_ = select.select(self.input_sockets, [], [], 0.1) # wait for 100ms, only interested in reading
         serials = []
         for socket in available:
             # print("sock", socket)
             # serials.append(self.read_data(socket))
             data = socket.recv(1024)
-            serials.append(data.decode('utf-8'))
+            data = data.decode('utf-8')
+            serials.append(data)
         return serials
-            # print(data.decode('utf-8'))
 
     # def read_data(self, in_socket):
     #     data = in_socket.recv(1024)
@@ -85,6 +92,7 @@ class Router(object):
             self.output_sockets[socket].close()
 
     def return_data(self):
-        return self.router_id, self.input_ports, self.output_ports, self.timer,\
+        return self.router_id, self.input_ports, self.output_ports,\
+        self.update_timer, self.timeout_timer, self.garbage_timer,\
         self.input_sockets, self.output_sockets, self.neigbour_dist,\
         self.neighbour_ports
